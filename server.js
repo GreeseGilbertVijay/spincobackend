@@ -28,7 +28,7 @@ const sendMail = async (firstname, email, message) => {
             name: "Cutting Edge",
             address: process.env.EMAIL,
         },
-        to: ["greesegilbertvijay@gmail.com", "info@spincotech.com"],
+        to: ["greesegilbertvijay@gmail.com", "info@spincotech.com, cuttingedge@spincotech.com"],
         subject: "New Mail From Cutting Edge App",
         html: `
             <h2>Cutting Edge App</h2>
