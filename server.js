@@ -1,7 +1,10 @@
 const express = require('express');
-const nodemailer = require('nodemailer');
+const fs = require('fs');
 const cors = require('cors');
 require('dotenv').config();
+const { sendMail } = require('./config/mailer');
+const path = require("path");
+
 
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -9,45 +12,13 @@ const PORT = process.env.PORT || 5000;
 app.use(cors());
 app.use(express.json());
 
-// Create reusable transporter object using SMTP transport
-const transporter = nodemailer.createTransport({
-    service: "gmail",
-    host: "smtp.gmail.com",
-    port: 465,
-    secure: true,
-    auth: {
-        user: process.env.EMAIL,
-        pass: process.env.PASSWORD,
-    },
+// Root route to display "Hello World"
+app.get("/", (req, res) => {
+    console.log("Hello World requested"); // Logs in the console
+    res.send("Server Running Successfully"); // Shows in the browser
 });
 
-// Function to send email
-const sendMail = async (firstname, email, message) => {
-    const mailOptions = {
-        from: {
-            name: "Cutting Edge",
-            address: process.env.EMAIL,
-        },
-        to: ["greesegilbertvijay@gmail.com", "info@spincotech.com, cuttingedge@spincotech.com"],
-        subject: "New Mail From Cutting Edge App",
-        html: `
-            <h2>Cutting Edge App</h2>
-            <p>Name: ${firstname} </p>
-            <p>Email: ${email}</p>
-            <p>Message: ${message}</p>
-        `,
-    };
-
-    try {
-        const info = await transporter.sendMail(mailOptions);
-        console.log("Email sent successfully!");
-        console.log("Message ID:", info.messageId);
-        return { success: true, message: "Email sent successfully!" };
-    } catch (error) {
-        console.error("Error Sending Email:", error);
-        throw error;
-    }
-};
+// Send Mail
 
 app.post("/send-email", async (req, res) => {
     try {
@@ -70,7 +41,53 @@ app.post("/send-email", async (req, res) => {
     }
 });
 
-app.listen(PORT, () => {
-    console.log(`Server running on port ${PORT}`);
+// Dynamic Content
+app.get('/paragraph', (req, res) => {
+    fs.readFile('./data/content.json', 'utf8', (err, data) => {
+        if (err) return res.status(500).json({ error: 'Failed to load data' });
+        res.json(JSON.parse(data));
+    });
 });
 
+// Endpoint to update paragraph
+app.post('/paragraph', (req, res) => {
+    const { paragraph, bannerlink } = req.body;
+    if (!paragraph && !bannerlink) return res.status(400).json({ error: 'Paragraph and link is required' });
+
+    fs.writeFile('./data/content.json', JSON.stringify({ paragraph, bannerlink }), (err) => {
+        if (err) return res.status(500).json({ error: 'Failed to update data' });
+        res.json({ message: 'Paragraph and link updated successfully' });
+    });
+});
+
+//App Update
+app.get('/version', (req, res) => {
+    fs.readFile('./data/version.json', 'utf8', (err, data) => {
+        if (err) return res.status(500).json({ error: 'Failed to load version data' });
+        res.json(JSON.parse(data));
+    });
+});
+
+// Path to the JSON file
+const sliderFilePath = path.join(__dirname, "data", "slider.json");
+
+// API endpoint to fetch slider data
+app.get("/slider", (req, res) => {
+  fs.readFile(sliderFilePath, "utf8", (err, data) => {
+    if (err) {
+      console.error("Error reading slider.json:", err);
+      return res.status(500).json({ error: "Failed to load slider data" });
+    }
+    try {
+      const sliderData = JSON.parse(data);
+      res.json(sliderData);
+    } catch (parseError) {
+      console.error("Error parsing slider.json:", parseError);
+      res.status(500).json({ error: "Invalid JSON format in slider.json" });
+    }
+  });
+});
+
+app.listen(PORT, () => {
+    console.log(`Server running on http://localhost:${PORT}`);
+});
