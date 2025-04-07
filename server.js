@@ -14,8 +14,8 @@ app.use(express.json());
 
 // Root route to display "Hello World"
 app.get("/", (req, res) => {
-    console.log("Hello World requested"); // Logs in the console
-    res.send("Server Running Successfully"); // Shows in the browser
+    console.log("Hello World requested");
+    res.send("Server Running Successfully");
 });
 
 // Send Mail
@@ -40,6 +40,7 @@ app.post("/send-email", async (req, res) => {
         });
     }
 });
+
 
 // Dynamic Content
 app.get('/paragraph', (req, res) => {
@@ -68,7 +69,7 @@ app.get('/version', (req, res) => {
     });
 });
 
-// Path to the JSON file
+// Path Slider
 const sliderFilePath = path.join(__dirname, "data", "slider.json");
 
 // API endpoint to fetch slider data
