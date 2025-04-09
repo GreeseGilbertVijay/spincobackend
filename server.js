@@ -14,7 +14,7 @@ app.use(express.json());
 
 // Root route to display "Hello World"
 app.get("/", (req, res) => {
-    console.log("Hello World requested");
+    console.log("Server Running Successfully");
     res.send("Server Running Successfully");
 });
 
