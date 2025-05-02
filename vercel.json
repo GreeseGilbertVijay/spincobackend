@@ -3,8 +3,7 @@
   "builds": [
     { 
       "src": "server.js", 
-      "use": "@vercel/node", 
-      "destination": "api/server" 
+      "use": "@vercel/node"
     }
   ]
 }
