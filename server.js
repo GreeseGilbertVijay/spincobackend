@@ -42,17 +42,6 @@ app.get('/paragraph', (req, res) => {
     });
 });
 
-// Endpoint to update paragraph
-app.post('/paragraph', (req, res) => {
-    const { paragraph, bannerlink } = req.body;
-    if (!paragraph && !bannerlink) return res.status(400).json({ error: 'Paragraph and link is required' });
-
-    fs.writeFile('./data/content.json', JSON.stringify({ paragraph, bannerlink }), (err) => {
-        if (err) return res.status(500).json({ error: 'Failed to update data' });
-        res.json({ message: 'Paragraph and link updated successfully' });
-    });
-});
-
 //App Update
 app.get('/version', (req, res) => {
     fs.readFile('./data/version.json', 'utf8', (err, data) => {
