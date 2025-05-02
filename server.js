@@ -35,9 +35,14 @@ app.post("/send-email", async (req, res) => {
 
 
 // Dynamic Content
+const contentFilePath = path.join(__dirname, "data", "content.json");
+
 app.get('/paragraph', (req, res) => {
-    fs.readFile('./data/content.json', 'utf8', (err, data) => {
-        if (err) return res.status(500).json({ error: 'Failed to load data' });
+    fs.readFile(contentFilePath, 'utf8', (err, data) => {
+        if (err) {
+            console.error("Error reading content.json:", err);
+            return res.status(500).json({ error: 'Failed to load data' });
+        }
         res.json(JSON.parse(data));
     });
 });
