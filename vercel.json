@@ -5,11 +5,5 @@
      "src": "server.js", 
      "destination": "@vercel/node" 
     }
-  ],
-  "routes":[
-    {
-     "src": "/(.*)",
-     "dest":"/" 
-    }
-  ] 
+  ]
 }

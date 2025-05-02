@@ -4,22 +4,14 @@ const cors = require('cors');
 require('dotenv').config();
 const { sendMail } = require('./config/mailer');
 const path = require("path");
-
-
 const app = express();
+
 const PORT = process.env.PORT || 5000;
 
 app.use(cors());
 app.use(express.json());
 
-// Root route to display "Hello World"
-app.get("/", (req, res) => {
-    console.log("Server Running Successfully");
-    res.send("Server Running Successfully");
-});
-
-// Send Mail
-
+// Send Main
 app.post("/send-email", async (req, res) => {
     try {
         const { firstname, email, message } = req.body;
@@ -89,6 +81,14 @@ app.get("/slider", (req, res) => {
   });
 });
 
+  // Root route to display "Hello World"
+app.get("/", (req, res) => {
+    console.log("Server Running Successfully");
+    res.send("Server Running Successfully");
+});
+
 app.listen(PORT, () => {
     console.log(`Server running on http://localhost:${PORT}`);
 });
+
+module.exports = app;
